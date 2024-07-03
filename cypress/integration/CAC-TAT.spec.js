@@ -1,10 +1,11 @@
-/// <reference types="Cypress" />
+//SEÇÃO 1
+///<reference types="Cypress" />
 describe('Central de Atendimento ao Cliente TAT', function() {
     //ex1 Padrão:Visita o site da aplicação antes de efetuar cada suite de teste
     beforeEach(function(){
         cy.visit('./src/index.html')
 })
-    
+//SEÇÃO 2   
     it('ex1 Padrão: Verifica o título da aplicação', function() {
         
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
@@ -14,7 +15,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             const longText = 'Teste, Teste, Teste, Teste, Teste, Teste,este, Teste, Teste, Teste, Teste, Teste'
             cy.get('#firstName').type('Claudia')
             cy.get('#lastName').type('Fresneda')
-            cy.get('#email').type('cfresneda@lenovo.com')
+            cy.get('#email').type('cfresneda@teste.com')
             cy.get('#phone').type('5555555555')
             cy.get('#open-text-area').type(longText,{delay: 0})
             //cy.get('button[type="submit"]').click()
@@ -28,7 +29,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
            //*Mensagem: Valide os campos obrigatórios
             cy.get('#firstName').type('Claudia')
             cy.get('#lastName').type('Fresneda')
-            cy.get('#email').type('cfresneda@lenovo,com')
+            cy.get('#email').type('cfresneda@teste,com')
             cy.get('#phone').type('5555555555')
             cy.get('#open-text-area').type('Teste')
             //cy.get('button[type="submit"]').click()
@@ -45,7 +46,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
                 .type('abcdefght')
                 .should('have.value', '')
             cy.get('#open-text-area').type('Teste')
-            //cy.get('button[type="submit"]').click()
+            //cy.get('button[type="submit"]').click() 
             
             cy.contains('button', 'Enviar').click()
             
@@ -53,7 +54,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         it('ex4 Alternativo: Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {
             cy.get('#firstName').type('Claudia')
             cy.get('#lastName').type('Fresneda')
-            cy.get('#email').type('cfresneda@lenovo,com')
+            cy.get('#email').type('cfresneda@teste,com')
             cy.get('#phone')
             cy.get('#phone-checkbox').click()
             //cy.get('button[type="submit"').click()
@@ -76,8 +77,8 @@ describe('Central de Atendimento ao Cliente TAT', function() {
                 .should('have.value', '')
 
             cy.get('#email')
-                .type('cfresneda@lenovo.com')
-                .should('have.value', 'cfresneda@lenovo.com')
+                .type('cfresneda@teste.com')
+                .should('have.value', 'cfresneda@teste.com')
                 .clear()
                 .should('have.value', '')
 
@@ -114,7 +115,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             que foram substituídos pelo cy.contains validando um botão e o 
             texto enviará e o nome do botão enviar*/
             cy.contains('button', 'Enviar').click()
-})  
+}) 
 //SEÇÃO 4
 
 //CAC - TAT - PRODUTO - SELECT ITEM
@@ -158,7 +159,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .should('have.value','ajuda')
 })
 
-        it('ex1.1 Padrão: Marca o tipo de atendimento e checa', function () {
+        it('ex1.2 Padrão: Marca o tipo de atendimento e checa', function () {
             cy.get('input[type="radio"]')
             //checa cada radio button informado conforme quantidade no length
             .should('have.length', 3)
@@ -186,21 +187,113 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .uncheck()
             .should('not.be.checked')
 
-        })
-        it.only('ex.1 Alternativo: Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {    
+    })
+        it('ex.1 Alternativo: Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {    
             cy.get('#firstName').type('Claudia')
             cy.get('#lastName').type('Fresneda')
-            cy.get('#email').type('cfresneda@lenovo,com')
+            cy.get('#email').type('cfresneda@teste.com')
             cy.get('#phone-checkbox').check()   //por questões de semântica e robustez
             cy.contains('button', 'Enviar').click()
+            cy.get('.error').should('be.visible')  
+    })
             
-            cy.get('.error').should('be.visible')
-          
+//SEÇÃO 7
+//.selectFile()
+        it('ex1 Padrão:Seleciona um arquivo da pasta fixtures', () => {
+            cy.get('input[type="file"]')
+            .should('not.have.value')
+            .selectFile('./cypress/fixtures/example.json')
+            .should(function($input) {
+            expect($input[0].files[0].name).to.equal('example.json')
         })
-            
-//SEÇÃO 7 - .selectFile()
+    })    
 
+        it('ex1 Alternativo: Seleciona um arquivo simulando um drag-and-drop', () => {
+        cy.get('input[type="file"]')
+        .should('not.have.value')
+        //simula a ação de arrastar e soltar o arquivo
+        .selectFile('./cypress/fixtures/example.txt', { action: 'drag-drop' })
+        .should(function($input) {
+        expect($input[0].files[0].name).to.equal('example.txt')
+        })
+    })
 
+    it('ex2 Alternativo: Seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', function () {
+        cy.fixture('example.txt').as('Exemplao')
+        //cy.fixture('example.json').as('sampleFile')
+        cy.get('input[type="file"]')
+        //Seleciona o arquivo através do codenome sampleFile dado neste código ao invés do caminho do arquivo
+        .selectFile('@Exemplao')
 
+    })
+        it('ex1 Alternativo-Youtube:Seleciona um arquivo simulando um drag-and-drop', () => {
+            cy.get('input[type="file"]')
+              .should('not.have.value')
+            //simula a ação de arrastar e soltar o arquivo
+            //Passamos o arquivo com argumento de options chamado action com o valor drag-drop
+            .selectFile('./cypress/fixtures/example.json', { action: 'drag-drop' })
+            .then(input => {
+            //valida a inclusão do 'primeiro arquivo [input 0], valida a escolha do primeiro arquivo selecionado [file 0]
+            expect(input[0].files[0].name).to.equal('example.json')
+        })
+    })
+//VERIFICAR E RESOLVER
+       it('ex2 Alternativo-Youtube:Seleciona múltiplos arquivos simulando um drag-and-drop', function () {
+            cy.get('input[type="file"]')
+            //simula a ação de arrastar e soltar o arquivo de múltiplos arquivos
+            //valida a inclusão do 'primeiro arquivo [input 0]
+            //valida a escolha do primeiro arquivo selecionado [file 0]
+            .selectFile
+            ([
+            './cypress/fixtures/example.json',
+            './cypress/fixtures/example.txt' 
+            ])  
+            //], { action: 'drag-drop' }) 
+            //NÃO DEU CERTO - erro: reading 'name' video em 15:18 https://www.youtube.com/watch?v=xwltoOnmfVE
+            .then(input =>{
+            console.log(input)
+            expect(input[0].files[0].name).to.equal('example.json')
+            expect(input[0].files[1].name).to.equal('example.txt')
+            })
+       })
 
+//SEÇÃO 8
+//MULTIPLE TABS
+        it('ex1 Padrão: Verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', /*function ()*/ () => {
+// _BLANK
+        // o href (Botão direito > 'Politica de privacidade' > Inspecionar) informa o target = _blank sendo possível verificar **SEM CLICAR** na frase política de privacidade que a mesma abrirá em outra aba pois por padrão em todos os navegadores a página com o target = _blank sempre abrirá numa nova página)
+            cy.get('#privacy a').should('have.attr', 'target', '_blank')
+        })
+
+        it('ex1 Alternativo: Acessa a página da política de privacidade removendo o target e então clicando no link' , () => {
+        //Hashtag (#) antes do componente significa que é um id do html possível ver no f12 Dev Tool    
+            cy.get('#privacy a')
+        // Invocar a remoção do atributo target da Politica de privacidade e abre a página na mesma página do cypress ao invés de abrir uma nova página
+            .invoke('removeAttr', 'target')
+
+            .click()
+
+            cy.contains('Talking About Testing').should('be.visible')
+        })
+        it('ex2 Desafio Alternativo: Testa a página da política de privacidade de forma independente', () => {
+            //PRIVACY.SPEC.JS 
+            //Criada pasta privacy.spec.js com o it do cy.visit('./src/privacy.html') e o check da frase Talking about testing
+            //Ao abrir o cypress esta pagina estará disponível para abrí-la direto
+               
+        })
+
+//SEÇÃO 9
+    //Ex1 Padrão: Simulando o viewport de um dispositivo móvel (410 largura x 860 altura)
+    //Criado no arquivo package.json > scripts o comando com altura e largura da pagina para Mobile
+    //"cy:open:mobile": "cypress open --config viewportWidth=410 viewportHeight=860",
+    //Ao executar este script todos os testes abrirão no modo Mobile
+
+    //SCRIPT CYPRESS RUN GERA OS TESTES EM MODO HEADLESS E GRAVA OS VÍDEOS DE CADA ARQUIVO DE TESTES
+    //SCREENSHOT APENAS COM TESTES FALHANDO
+    //IT.SKIP (pula o teste com esta informação no primeiro argumento)
+
+//SEÇÃO 10
+    
+//SEÇÃO 13
+    //Desafio - não será executado
 })
