@@ -1,9 +1,11 @@
 name: End-to-end tests 🧪
+#Nome do Pipeline
 on: [push]
-jobs:
+#Qualquer push de qualquer branch vai disparar este pipeline
+jobs: #Comando vai rodas cypress run no git com o ubuntu do linux
   cypress-run:
-    runs-on: ubuntu-20.04 #verificar se não é windows
-    steps:
+    runs-on: ubuntu-20.04
+    steps: #baixar no workspace do github actions o código do projeto
       - name: Checkout
         uses: actions/checkout@v2
       # Install NPM dependencies, cache them correctly
