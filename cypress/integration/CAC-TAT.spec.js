@@ -89,8 +89,8 @@ describe('Central de Atendimento ao Cliente TAT', function() {
                 .should('have.value', '')
 
             cy.get('#phone')
-                .type('13555555555')
-                .should('have.value', '13555555555')
+                .type('139997911999')
+                .should('have.value', '139997911999')
                 .clear()
                 .should('have.value', '')
 
