@@ -89,13 +89,8 @@ describe('Central de Atendimento ao Cliente TAT', function() {
                 .should('have.value', '')
 
             cy.get('#phone')
-<<<<<<< HEAD
                 .type('139997911999')
                 .should('have.value', '139997911999')
-=======
-                .type('13555555555')
-                .should('have.value', '13555555555')
->>>>>>> 2715b4d (Create cypress project)
                 .clear()
                 .should('have.value', '')
 
